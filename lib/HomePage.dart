@@ -1,7 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'ReadPage.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -30,7 +29,13 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: TextButton(
           onPressed: () => Get.toNamed('/read'),
-          child: const Text("데미안 읽기"),
+          child: const Text(
+            "Demian 읽기",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+            ),
         ),
       ),
     );

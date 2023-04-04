@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'HomePage.dart';
 import 'ReadPage.dart';
+import 'UnderstandPage.dart';
 
 
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => const HomePage(title: "Nonskip Classic")),
         GetPage(name: '/read', page: () => const ReadPage(title: "Demian")),
+        GetPage(name: '/understand', page: () => const UnderstandPage(title: "Understand")),
       ],
     );
   }

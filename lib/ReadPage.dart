@@ -1,6 +1,7 @@
 import 'package:custom_selectable_text/custom_selectable_text.dart';
 import 'package:flutter/material.dart';
-import 'dart:html' as html;
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 
 
@@ -23,9 +24,8 @@ class _ReadPageState extends State<ReadPage> {
   @override
   void initState() {
     super.initState();
-    // Prevent default event handler
-    // https://stackoverflow.com/a/66118433
-    // html.document.onContextMenu.listen((event) => event.preventDefault());
+    // this is available only on flutter upto 2.9.0
+    BrowserContextMenu.disableContextMenu();
   }
 
   @override
@@ -34,29 +34,35 @@ class _ReadPageState extends State<ReadPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          children: const [
-            // The name of the chapter
-            Text("Chapter 1 - Two Realms",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              ),
+      body: Column(
+        children: [
+          // The name of the chapter
+          const Text("Chapter 1 - Two Realms",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
             ),
-            SizedBox(height: 30),
-            // this is where the contents are in
-            SelectableText("I begin my story with an event from the time when I was ten years old, attending the local grammar school in our small country town.",
-            style: TextStyle(
-              fontSize: 20,
-              ),
-            toolbarOptions: ToolbarOptions(
-              copy: true,
-              selectAll: true,
-              ),
+          ),
+          const SizedBox(height: 30),
+          // this is where the contents are in
+          CustomSelectableText("I begin my story with an event from the time when I was ten years old, attending the local grammar school in our small country town.",
+          style: const TextStyle(
+            fontSize: 20,
             ),
-          ],
-        ),
+          items: [
+            CustomSelectableTextItem(
+              label: "무슨 뜻이야?",
+              controlType: SelectionControlType.other,
+              onPressed: (text) {
+                Get.toNamed(
+                  '/understand', 
+                arguments: text
+                );
+              }
+            ),
+          ]
+          ),
+        ],
       ),
     );
   }
