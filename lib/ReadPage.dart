@@ -803,13 +803,14 @@ uncommunicative.
 
 class ReadPage extends StatelessWidget {
   ReadPage({super.key});
+
   final ReadController controller = Get.put(ReadController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("📖 reading Demian"),
+        title: const Text("Nonskip Classic"),
       ),
       body: Obx(
         () => Column(
@@ -837,12 +838,11 @@ class ReadPage extends StatelessWidget {
                           controlType: SelectionControlType.other,
                           onPressed: (text) {
                             Get.toNamed(
-                            '/chat', 
-                            arguments: text,
+                            '/understandchat', 
+                            arguments: {'text': text, 'for': "understand"},
                             );
                           }
                         ),
-                       
                       ],
                     )
                 ),
@@ -871,8 +871,8 @@ class ReadPage extends StatelessWidget {
                 ),
             const SizedBox(height: 30),
             ElevatedButton(
-            onPressed: () => Get.toNamed('/chat'),
-            child: const Text("🤔 해세와 챕터 회고하기"),
+            onPressed: () => Get.toNamed('/reflectchat', arguments: {'for': "reflect"}),
+            child: const Text("[해세]와 함께 챕터 회고하기 🤔"),
             ),
             const SizedBox(height: 30),
           ],

@@ -1,41 +1,26 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+class HomeController extends GetxController {
 
-  final String title;
-
-  @override
-  State<HomePage> createState() => _HomePageState(); 
 }
 
-
-class _HomePageState extends State<HomePage> {
-  
-  @override
-  void initState() {
-    super.initState();
-  }
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
+  final controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text("Nonskip Classic"),
       ),
       body: Center(
-        child: TextButton(
-          onPressed: () => Get.toNamed('/read'),
-          child: const Text(
-            "Demian 읽기",
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-            ),
+        child: IconButton(
+          onPressed: () => Get.toNamed('/coffeechat'),
+          icon: Image.asset("images/demian.png"), 
+          iconSize: 450,
         ),
       ),
     );

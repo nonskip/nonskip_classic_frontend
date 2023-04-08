@@ -10,59 +10,39 @@ class Message {
   final String text;
 }
 
-class ChatController extends GetxController {
+class ReflectChatController extends GetxController {
+  late String assistantImgUrl = "images/hesse.png";
   final messages = <Message>[].obs;
-  late String assistantImgUrl;
 
-  ChatController() {
-    if (Get.previousRoute.toString() == "/read") {
-      assistantImgUrl = "images/chatgpt.png";
-    }
-    else {
-      assistantImgUrl = "images/hesse.png";
-    }
-  }
-  
   @override
-  void onReady() {
-    // start by asking the selected text
-    messages.add(Message(text: Get.arguments.toString(), isSentByMe: true, profileImageUrl: "images/user.png"));
-     Future.delayed(const Duration(seconds: 2), () {
-      messages.add(Message(text: "I am Hesse", isSentByMe: false, profileImageUrl: assistantImgUrl));
-    });
-  }
+  Future<void> onReady() async {
+    // start by  
+    await Future.delayed(const Duration(seconds: 1));
+    messages.add(Message(text: "첫번째 챕터를 다 읽었군! 축하해!", isSentByMe: false, profileImageUrl: assistantImgUrl));
+    await Future.delayed(const Duration(seconds: 1));
+    messages.add(Message(text: "첫번째 챕터는 선과 악으로 대비되는 두 세계에 대한 내용이라네. 첫번째 챕터는 어땠는가?", isSentByMe: false, profileImageUrl: assistantImgUrl));
 
-  explain(String selectedText, TextEditingController textEditngController) {
-    messages.add(Message(text: selectedText, isSentByMe: true, profileImageUrl: "images/user.png"));
-    // call the explain API and get the answer
-    // get it and add it to messages
-        Future.delayed(const Duration(seconds: 2), () {
-      messages.add(Message(text: "I am Hesse", isSentByMe: false, profileImageUrl: assistantImgUrl));
-    });
   }
-
-  chat(Message message, TextEditingController textEditngController) {
+  chat(Message message, TextEditingController textEditngController) async {
     messages.add(message);
     textEditngController.clear();
     // call the Chat API and get the answer
     // get it and add it to messages
-    Future.delayed(const Duration(seconds: 2), () {
-      messages.add(Message(text: "I am Hesse", isSentByMe: false, profileImageUrl: assistantImgUrl));
-    });
+    await Future.delayed(const Duration(seconds: 1));
+    messages.add(Message(text: "채팅 기능은 아직 구현되지 않았습니다.", isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
 }
-class ChatPage extends StatelessWidget {
-  ChatPage({super.key});
+class ReflectChatPage extends StatelessWidget {
+  ReflectChatPage({super.key});
 
-  final ChatController controller = Get.put(ChatController());
+  final ReflectChatController controller = Get.put(ReflectChatController());
   final textEditngController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Get.arguments.toString())),
+        title: const Text("Nonskip Classic")),
       body: Column(
         children: [
           Expanded(
@@ -110,7 +90,13 @@ class ChatPage extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     decoration: const InputDecoration(
-                      hintText: '더 궁금한게 있나요?',
+                      hintText: 'Type a message...',
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                                      width: 3,
+                                      color: Colors.grey
+                        ), 
+                      ),
                     ),
                     controller: textEditngController,
                     onSubmitted: (String text) {
@@ -126,6 +112,7 @@ class ChatPage extends StatelessWidget {
               ], // children
             ),
           ),
+          const SizedBox(height: 10.0)
         ],
       ),
     );

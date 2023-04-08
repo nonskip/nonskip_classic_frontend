@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'CoffeeChatPage.dart';
 import 'HomePage.dart';
 import 'ReadPage.dart';
-import 'ChatPage.dart';
+import 'ReflectChatPage.dart';
+import 'UnderstandChatPage.dart';
 
 
 
@@ -24,9 +26,11 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       getPages: [
-        GetPage(name: '/', page: () => const HomePage(title: "Nonskip Classic")),
+        GetPage(name: '/', page: () => HomePage()),
         GetPage(name: '/read', page: () => ReadPage()),
-        GetPage(name: '/chat', page: () => ChatPage()),
+        GetPage(name: '/coffeechat', page: () => CoffeeChatPage()),
+        GetPage(name: '/understandchat', page: () => UnderstandChatPage()),
+        GetPage(name: '/reflectchat', page: () => ReflectChatPage()),
       ],
     );
   }
