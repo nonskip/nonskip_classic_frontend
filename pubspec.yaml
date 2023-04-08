@@ -61,6 +61,7 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
+  # (migrate this to a remote bucket as soon as you can. Now, I'm storing it locally for the sake of MVP)
   assets:
     - images/hesse.png
     - images/user.png

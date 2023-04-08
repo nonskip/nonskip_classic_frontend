@@ -110,7 +110,7 @@ class ChatPage extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     decoration: const InputDecoration(
-                      hintText: '더 궁금한게 있나요? 여기에 입력하세요.',
+                      hintText: '더 궁금한게 있나요?',
                     ),
                     controller: textEditngController,
                     onSubmitted: (String text) {

@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const HomePage(title: "Nonskip Classic")),
-        GetPage(name: '/read', page: () => const ReadPage(title: "Demian")),
+        GetPage(name: '/read', page: () => ReadPage()),
         GetPage(name: '/chat', page: () => ChatPage()),
       ],
     );
