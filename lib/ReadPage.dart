@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:custom_selectable_text/custom_selectable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +26,11 @@ class _ReadPageState extends State<ReadPage> {
   void initState() {
     super.initState();
     // this is available only on flutter upto 2.9.0
-    BrowserContextMenu.disableContextMenu();
+    try {
+        BrowserContextMenu.disableContextMenu();
+    }on AssertionError {
+      // just ignore the error
+    }
   }
 
   @override
@@ -55,8 +60,8 @@ class _ReadPageState extends State<ReadPage> {
               controlType: SelectionControlType.other,
               onPressed: (text) {
                 Get.toNamed(
-                  '/understand', 
-                arguments: text
+                  '/chat', 
+                arguments: text,
                 );
               }
             ),
