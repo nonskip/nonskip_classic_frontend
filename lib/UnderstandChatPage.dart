@@ -1,5 +1,9 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'OpenAIDialogue.dart';
+import 'OpenAIMessage.dart';
+import 'RESTService.dart';
 
 
 class Message {
@@ -17,19 +21,16 @@ class UnderstandChatController extends GetxController {
   @override
   Future<void> onReady() async {
   // start by asking the selected text
-  messages.add(Message(text: Get.arguments?['text'], isSentByMe: true, profileImageUrl: "images/user.png"));
-  await Future.delayed(const Duration(seconds: 1));
-  messages.add(Message(text: "설명 기능은 아직 구현되지 않았습니다.", isSentByMe: false, profileImageUrl: assistantImgUrl));
-
+  messages.add(Message(text: Get.arguments?['selectedText'], isSentByMe: true, profileImageUrl: "images/user.png"));
+  OpenAIDialogue dialogue = await RESTService.explain(Get.arguments?['context'], Get.arguments?['selectedText']);
+  messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   } 
 
-  chat(Message message, TextEditingController textEditngController) async {
+  sendMessage(Message message, TextEditingController textEditngController) async {
     messages.add(message);
     textEditngController.clear();
-    // call the Chat API and get the answer
-    // get it and add it to messages
-    await Future.delayed(const Duration(seconds: 1));
-    messages.add(Message(text: "채팅 기능도 아직 구현되지 않았습니다.", isSentByMe: false, profileImageUrl: assistantImgUrl));
+    OpenAIDialogue dialogue = await RESTService.chat(OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text)))));
+    messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
 }
 
@@ -101,14 +102,14 @@ class UnderstandChatPage extends StatelessWidget {
                     ),
                     controller: textEditngController,
                     onSubmitted: (String text) {
-                      controller.chat(Message(text: text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
+                      controller.sendMessage(Message(text: text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
                     },
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    controller.chat(Message(text: textEditngController.text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
+                    controller.sendMessage(Message(text: textEditngController.text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
                   })
               ], // children
             ),

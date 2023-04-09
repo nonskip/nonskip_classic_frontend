@@ -839,7 +839,7 @@ class ReadPage extends StatelessWidget {
                           onPressed: (text) {
                             Get.toNamed(
                             '/understandchat', 
-                            arguments: {'text': text, 'for': "understand"},
+                            arguments: {'context': controller.pages[controller.currentPage.value], 'selectedText': text, 'for': "understand"},
                             );
                           }
                         ),

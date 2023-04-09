@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'OpenAIDialogue.dart';
+import 'OpenAIMessage.dart';
+import 'RESTService.dart';
+
 
 class Message {
   Message({required this.text, required this.isSentByMe, required this.profileImageUrl});
@@ -15,21 +19,19 @@ class ReflectChatController extends GetxController {
   final messages = <Message>[].obs;
 
   @override
-  Future<void> onReady() async {
-    // start by  
-    await Future.delayed(const Duration(seconds: 1));
-    messages.add(Message(text: "첫번째 챕터를 다 읽었군! 축하해!", isSentByMe: false, profileImageUrl: assistantImgUrl));
-    await Future.delayed(const Duration(seconds: 1));
-    messages.add(Message(text: "첫번째 챕터는 선과 악으로 대비되는 두 세계에 대한 내용이라네. 첫번째 챕터는 어땠는가?", isSentByMe: false, profileImageUrl: assistantImgUrl));
-
+  onReady() async {
+        // get the first response from the API
+    OpenAIDialogue dialogue =  await RESTService.reflect(); 
+    // add the response to the system prompt to the messages
+    messages.add(Message(text: dialogue.messages[1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
-  chat(Message message, TextEditingController textEditngController) async {
+    sendMessage(Message message, TextEditingController textEditngController) async {
     messages.add(message);
     textEditngController.clear();
     // call the Chat API and get the answer
     // get it and add it to messages
-    await Future.delayed(const Duration(seconds: 1));
-    messages.add(Message(text: "채팅 기능은 아직 구현되지 않았습니다.", isSentByMe: false, profileImageUrl: assistantImgUrl));
+    OpenAIDialogue dialogue = await RESTService.chat(OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text)))));
+    messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
 }
 class ReflectChatPage extends StatelessWidget {
@@ -100,14 +102,14 @@ class ReflectChatPage extends StatelessWidget {
                     ),
                     controller: textEditngController,
                     onSubmitted: (String text) {
-                      controller.chat(Message(text: text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
+                      controller.sendMessage(Message(text: text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
                     },
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    controller.chat(Message(text: textEditngController.text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
+                    controller.sendMessage(Message(text: textEditngController.text, isSentByMe: true, profileImageUrl: 'images/user.png'), textEditngController);
                   })
               ], // children
             ),
