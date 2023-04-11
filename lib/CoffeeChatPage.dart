@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:nonskip_classic_frontend/OpenAIDialogue.dart';
 import 'OpenAIMessage.dart';
 import 'RESTService.dart';
-
 
 
 
@@ -19,17 +17,15 @@ class Message {
 class CoffeeChatController extends GetxController {
   String assistantImgUrl = "images/hesse.png";
   final messages = <Message>[].obs;
-  bool isLoading = false;
 
 
   @override
   onReady() async {
     // get the first response from the API
-    isLoading = true;
+    messages.add(Message(text: "생각 중...",  isSentByMe: false, profileImageUrl: assistantImgUrl));
     OpenAIDialogue dialogue =  await RESTService.coffeeChat(); 
     // add the response to the system prompt to the messages
     messages.add(Message(text: dialogue.messages[1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
-    isLoading = false;
   }
 
   sendMessage(Message message, TextEditingController textEditngController) async {
@@ -37,10 +33,8 @@ class CoffeeChatController extends GetxController {
     textEditngController.clear();
     // call the Chat API and get the answer
     // get it and add it to messages
-    isLoading = true;
     OpenAIDialogue dialogue = await RESTService.chat(OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text)))));
     messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
-    isLoading = false;
   }
 
 }

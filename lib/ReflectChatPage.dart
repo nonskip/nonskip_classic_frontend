@@ -21,6 +21,7 @@ class ReflectChatController extends GetxController {
   @override
   onReady() async {
         // get the first response from the API
+    messages.add(Message(text: "생각 중...",  isSentByMe: false, profileImageUrl: assistantImgUrl));
     OpenAIDialogue dialogue =  await RESTService.reflect(); 
     // add the response to the system prompt to the messages
     messages.add(Message(text: dialogue.messages[1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
