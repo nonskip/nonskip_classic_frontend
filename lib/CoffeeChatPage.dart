@@ -16,6 +16,7 @@ class Message {
 
 class CoffeeChatController extends GetxController {
   String assistantImgUrl = "images/hesse.png";
+  late OpenAIMessage systemMessage;
   final messages = <Message>[].obs;
 
 
@@ -24,6 +25,7 @@ class CoffeeChatController extends GetxController {
     // get the first response from the API
     messages.add(Message(text: "생각 중...",  isSentByMe: false, profileImageUrl: assistantImgUrl));
     OpenAIDialogue dialogue =  await RESTService.coffeeChat(); 
+    systemMessage = dialogue.messages[0];
     // add the response to the system prompt to the messages
     messages.add(Message(text: dialogue.messages[1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
@@ -33,7 +35,9 @@ class CoffeeChatController extends GetxController {
     textEditngController.clear();
     // call the Chat API and get the answer
     // get it and add it to messages
-    OpenAIDialogue dialogue = await RESTService.chat(OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text)))));
+    OpenAIDialogue dialogue = OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text))));
+    dialogue.messages.insert(0, systemMessage);
+    dialogue = await RESTService.chat(dialogue);
     messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
 

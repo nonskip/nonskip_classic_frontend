@@ -11,11 +11,13 @@ class Message {
 
   final bool isSentByMe;
   final String profileImageUrl;
+  late OpenAIMessage systemMessage;
   final String text;
 }
 
 class UnderstandChatController extends GetxController {
-  late String assistantImgUrl = "images/chatgpt.png";
+  final String assistantImgUrl = "images/hesse.png";
+  late OpenAIMessage systemMessage;
   final messages = <Message>[].obs;
 
   @override
@@ -23,15 +25,21 @@ class UnderstandChatController extends GetxController {
   // start by asking the selected text
   messages.add(Message(text: Get.arguments?['selectedText'], isSentByMe: true, profileImageUrl: "images/user.png"));
   OpenAIDialogue dialogue = await RESTService.explain(Get.arguments?['context'], Get.arguments?['selectedText']);
+  systemMessage = dialogue.messages[0];
   messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   } 
 
   sendMessage(Message message, TextEditingController textEditngController) async {
     messages.add(message);
     textEditngController.clear();
-    OpenAIDialogue dialogue = await RESTService.chat(OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text)))));
+    // call the Chat API and get the answer
+    // get it and add it to messages
+    OpenAIDialogue dialogue = OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text))));
+    dialogue.messages.insert(0, systemMessage);
+    dialogue = await RESTService.chat(dialogue);
     messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
   }
+
 }
 
 class UnderstandChatPage extends StatelessWidget {
