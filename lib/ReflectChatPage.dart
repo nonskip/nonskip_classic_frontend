@@ -34,7 +34,9 @@ class ReflectChatController extends GetxController {
     textEditngController.clear();
     // call the Chat API and get the answer
     // get it and add it to messages
-    OpenAIDialogue dialogue = OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) => OpenAIMessage(role: "user", content: x.text))));
+    OpenAIDialogue dialogue = OpenAIDialogue(messages: List<OpenAIMessage>.from(messages.map((x) =>
+     // role = "user" if sentbyMe, else role = "assistant"
+     OpenAIMessage(role: x.isSentByMe ? "user" : "assistant", content: x.text))));
     dialogue.messages.insert(0, systemMessage);
     dialogue = await RESTService.chat(dialogue);
     messages.add(Message(text: dialogue.messages[dialogue.messages.length - 1].content, isSentByMe: false, profileImageUrl: assistantImgUrl));
